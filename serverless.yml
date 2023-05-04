@@ -1,0 +1,25 @@
+service: ukr-pepe-bot
+provider:
+  name: aws
+  runtime: rust
+  region: eu-central-1
+plugins:
+  - serverless-rust
+package:
+  individually: true
+custom:
+  # this section allows for customization of the default
+  # serverless-rust plugin settings
+  rust:
+    # experimental! when set to true, artifacts are built locally outside of docker
+    dockerless: true
+    # for example, allow local running on ARM macs
+    target: aarch64-apple-darwin
+#    linker: clang
+functions:
+  test:
+    handler: hello_world
+    events:
+      - http:
+          path: /test
+          method: GET
