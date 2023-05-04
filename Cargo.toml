@@ -1,2 +1,2 @@
 [workspace]
-members = ["hello_world"]
+members = ["hello_world", "v1_dialog_completing"]

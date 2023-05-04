@@ -1,21 +1,24 @@
 service: ukr-pepe-bot
+
 provider:
   name: aws
   runtime: rust
   region: eu-central-1
+  memorySize: 128
+
 plugins:
   - serverless-rust
+
 package:
   individually: true
+
 custom:
-  # this section allows for customization of the default
-  # serverless-rust plugin settings
   rust:
-    # experimental! when set to true, artifacts are built locally outside of docker
     dockerless: true
-    # for example, allow local running on ARM macs
+    # allow local running on ARM macs
     target: aarch64-apple-darwin
 #    linker: clang
+
 functions:
   test:
     handler: hello_world
@@ -23,3 +26,12 @@ functions:
       - http:
           path: /test
           method: GET
+  v1_dialog_completing:
+    handler: v1_dialog_completing
+    timeout: 30
+    environment:
+      OPENAI_API_KEY: ${file(credentials.yaml):OPENAI_API_KEY}
+    events:
+      - http:
+          path: /dialog-completions
+          method: POST
