@@ -4,6 +4,8 @@ use async_openai::{
     Client,
 };
 // use serde_json::{json};
+use tbot::prelude::*;
+use tbot::types::user::Id as UserChatId;
 
 
 fn generate_main_user_message(messages: &[Message; 3]) -> String {
@@ -56,35 +58,45 @@ async fn function_handler(event: Request) -> Result<Response<Body>, Error> {
         }
     ];
 
-    let request = CreateChatCompletionRequestArgs::default()
-        .max_tokens(125_u16)
-        .model("gpt-3.5-turbo")
-        .temperature(0.7_f32)
-        .messages([
-            ChatCompletionRequestMessageArgs::default()
-                .role(Role::System)
-                .content(
-                    "Act as a member of the friends group chat. \
-                    You are a freaky, funny, and interesting companion. \
-                    You like to says crazy things, \
-                    which surprise and amuse your friends using swearing sometimes. \
-                    You are rude a little."
-                    // You love Ukraine, hate Russia and Putin. Sometimes you use ."
-                    // #TODO finish
-                )
-                .build()?,
-            ChatCompletionRequestMessageArgs::default()
-                .role(Role::User)
-                .content(generate_main_user_message(&messages))
-                .build()?
-        ])
-        .build()?;
-
-    let response = client.chat().create(request).await?;
+    // let request = CreateChatCompletionRequestArgs::default()
+    //     .max_tokens(125_u16)
+    //     .model("gpt-4")
+    //     .temperature(0.7_f32)
+    //     .messages([
+    //         ChatCompletionRequestMessageArgs::default()
+    //             .role(Role::System)
+    //             .content(
+    //                 "Act as a member of the friends group chat. \
+    //                 You are a freaky, funny, and interesting companion. \
+    //                 You like to says crazy things, \
+    //                 which surprise and amuse your friends using swearing sometimes. \
+    //                 You are rude a little."
+    //                 // You love Ukraine, hate Russia and Putin. Sometimes you use ."
+    //                 // #TODO finish
+    //             )
+    //             .build()?,
+    //         ChatCompletionRequestMessageArgs::default()
+    //             .role(Role::User)
+    //             .content(generate_main_user_message(&messages))
+    //             .build()?
+    //     ])
+    //     .build()?;
+    //
+    // let response = client.chat().create(request).await?;
+    // let resp = Response::builder()
+    //     .status(200)
+    //     .body(response.choices[0].message.content.clone().into())
+    //     .map_err(Box::new)?;
     let resp = Response::builder()
         .status(200)
-        .body(response.choices[0].message.content.clone().into())
+        .body("OK".into())
         .map_err(Box::new)?;
+
+
+    let mut bot = tbot::Bot::from_env("TELEGRAM_BOT_TOKEN");
+
+    bot.send_message(UserChatId(355526766), "Hello world!").call().await.unwrap();
+    // bot.polling().start().await.unwrap();
     Ok(resp)
 }
 
