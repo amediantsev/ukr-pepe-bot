@@ -1,0 +1,2 @@
+[workspace]
+members = ["v1_dialog_completing"]

@@ -1,0 +1,22 @@
+service: ukr-pepe-bot
+
+provider:
+  name: aws
+  runtime: python3.10
+  region: eu-central-1
+  memorySize: 128
+
+custom:
+  credentials: ${file(credentials.yaml)}
+
+functions:
+  v1_dialog_completing:
+    handler: v1_dialog_completing
+    timeout: 60
+    environment:
+      OPENAI_API_KEY: ${self:custom.credentials.OPENAI_API_KEY}
+      TELEGRAM_BOT_TOKEN: ${self:custom.credentials.TELEGRAM_BOT_TOKEN}
+    events:
+      - http:
+          path: /dialog-completions
+          method: POST

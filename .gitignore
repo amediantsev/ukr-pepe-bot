@@ -15,8 +15,8 @@ Cargo.lock
 
 # serverless related stuff
 node_modules/
-.serverless/
+serverless/
 
 .idea/
 
-credentials.yaml
+rust_attempt/credentials.yaml
