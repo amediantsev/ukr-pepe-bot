@@ -17,5 +17,5 @@ def complete_chat(messages: List[dict]) -> str:
         messages=messages,
         temperature=0.75,
     )
-    print(response)
+    # print(response)
     return response["choices"][0]["message"]["content"]
