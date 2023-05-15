@@ -16,7 +16,11 @@ Cargo.lock
 # serverless related stuff
 node_modules/
 serverless/
+samconfig.toml
 
 .idea/
 
 rust_attempt/credentials.yaml
+
+venv/
+.aws-sam/
