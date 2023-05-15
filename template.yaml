@@ -61,32 +61,6 @@ Resources:
                 - "dynamodb:DeleteItem"
                 - "dynamodb:BatchWriteItem"
               Resource: "*"
-  SendRandomMessage:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: src/handlers/send_random_message
-      Handler: main.handler
-      Layers:
-        - !Ref MainLayer
-      Events:
-        SendSuggestion:
-          Type: Schedule
-          Properties:
-            Schedule: rate(5 minutes)
-            Enabled: true
-      Policies:
-        - Statement:
-            - Sid: DynamodbPolicy
-              Effect: Allow
-              Action:
-                - "dynamodb:GetItem"
-                - "dynamodb:PutItem"
-                - "dynamodb:Query"
-                - "dynamodb:UpdateItem"
-                - "dynamodb:DescribeTable"
-                - "dynamodb:DeleteItem"
-                - "dynamodb:BatchWriteItem"
-              Resource: "*"
 
   # DynamoDB
   MainTable:
