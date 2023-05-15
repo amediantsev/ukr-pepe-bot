@@ -5,17 +5,19 @@ Globals:
   Function:
     Timeout: 60
     Runtime: python3.9
+    MemorySize: 128
     Environment:
       Variables:
         TELEGRAM_TOKEN: !Sub "${botToken}"
         TABLE_NAME:
           Ref: MainTable
         ADMIN_IDS: !Sub "${AdminIds}" # Comma separated list
+        OPENAI_API_KEY: !Sub "${OpenAiApiKey}"
 
 Parameters:
   botToken:
     Type: String
-  OpenApiKey:
+  OpenAiApiKey:
     Type: String
   AdminIds:
     Type: String
