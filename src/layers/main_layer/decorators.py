@@ -1,5 +1,4 @@
 import json
-import os
 import traceback
 from http import HTTPStatus
 
@@ -12,8 +11,6 @@ from tg import ADMIN_IDS, send_message, bot
 from users import USERNAMES
 
 logger = Logger()
-
-POLLING_LAMBDA_ARN = os.getenv("POLLING_LAMBDA_ARN")
 
 
 def handle_errors(f):

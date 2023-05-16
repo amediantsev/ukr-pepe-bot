@@ -13,12 +13,10 @@ logger = Logger()
 
 @backoff.on_exception(backoff.expo, openai.error.RateLimitError, max_tries=3)
 def complete_chat(messages: List[dict]) -> str:
-    logger.info({"messages": messages})
     response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=messages,
         temperature=0.65,
         max_tokens=125,
     )
-    # print(response)
     return response["choices"][0]["message"]["content"]

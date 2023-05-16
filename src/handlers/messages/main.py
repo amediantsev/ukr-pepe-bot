@@ -29,17 +29,15 @@ def skip_update(update: Update) -> bool:
         (
             not update.message,
             (
-                # update.message.chat.type not in (CHAT_GROUP, CHAT_SUPERGROUP)
-                # and str(update.message.chat_id) not in ADMIN_IDS
-                str(update.message.chat_id)
-                not in ADMIN_IDS
+                update.message.chat.type not in (CHAT_GROUP, CHAT_SUPERGROUP)
+                and str(update.message.chat_id) not in ADMIN_IDS
             ),
             update.message.text and len(update.message.text) > 200,
         )
     )
 
 
-def send_message_triggered(message: Message, last_pepe_reply=None):
+def sending_message_triggered(message: Message, last_pepe_reply=None):
     message_text = message.text.lower()
     return any(
         (
@@ -56,21 +54,19 @@ def handler(event, _):
     update = Update.de_json(json.loads(event.get("body") or "{}"), bot)
     if skip_update(update):
         return {"statusCode": HTTPStatus.OK}
-    logger.info(update)
+    # logger.info(update)
     message = dict(username=USERNAMES.get(update.message.from_user.id, "Павло"), text=update.message.text)
     conversation = dynamodb_operations.get_conversation(update.message.chat_id)
     if not conversation or update.message.date.timestamp() - float(conversation["updated_at"]) > SIX_HOURS:
         dynamodb_operations.create_conversation(chat_id=update.message.chat_id, **message)
     else:
-        print("len(messages): ", len(conversation.get("messages", [])))
-        print("lGPT_CONTEXT_LENGTH: ", GPT_CONTEXT_LENGTH)
         dynamodb_operations.append_conversation_message(
             chat_id=update.message.chat_id,
             **message,
             pop_old_message=len(conversation.get("messages", [])) >= GPT_CONTEXT_LENGTH
         )
 
-    if send_message_triggered(update.message, last_pepe_reply=conversation.get("last_pepe_reply")):
+    if sending_message_triggered(update.message, last_pepe_reply=conversation.get("last_pepe_reply")):
         pepe_reply = generate_pepe_message(conversation.get("messages", []) + [message])
         for name, ukr_name in USERNAMES_TO_UKR.items():
             pepe_reply = pepe_reply.replace(name, ukr_name)

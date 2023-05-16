@@ -36,7 +36,6 @@ def append_conversation_message(chat_id, username, text, conversation_type="FUNN
             Key={"pk": f"CONVERSATION#{chat_id}", "sk": f"CONVERSATION#{conversation_type}"},
             UpdateExpression="REMOVE messages[0]",
         )
-    print("pop_old_message is ", pop_old_message)
     update_expression = "SET messages = list_append(messages, :new_message), updated_at = :now"
     expression_attribute_values = {
         ":new_message": [{"username": username, "text": text}],
