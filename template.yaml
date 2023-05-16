@@ -36,10 +36,11 @@ Resources:
 
   # Lambda functions
   UpdatesHandler:
-    Type: AWS::Serverless::Function 
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: src/handlers/messages
       Handler: main.handler
+      Timeout: 180
       Layers:
         - !Ref MainLayer
       Events:
