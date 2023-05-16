@@ -18,7 +18,7 @@ logger = Logger()
 
 TWO_MINUTES = 2 * 60
 SIX_HOURS = 6 * 60 * 60
-GPT_CONTEXT_LENGTH = 6
+GPT_CONTEXT_LENGTH = 5
 ADMIN_IDS = os.getenv("ADMIN_IDS", "").split(",")
 # EBOSHIM_MOSHСNO_CHAT_ID = "-1001318344639"
 SINGLE_MESSAGE_USER_PROMPT = "Напиши повідомлення довжиною від 5 до 30 слів у продовження до бесіди :\n"
