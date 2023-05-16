@@ -28,6 +28,7 @@ def skip_update(update: Update) -> bool:
     return any(
         (
             not update.message,
+            not update.message.text,
             (
                 update.message.chat.type not in (CHAT_GROUP, CHAT_SUPERGROUP)
                 and str(update.message.chat_id) not in ADMIN_IDS
