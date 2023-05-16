@@ -26,18 +26,17 @@ RANDOM_SINGLE_MESSAGE_USER_PROMPT = "Напиши дурне смішне пов
 
 
 def skip_update(update: Update) -> bool:
-    return any(
-        (
-            not update.message,
-            not update.message.text,
-            (
-                update.message.chat.type not in (CHAT_GROUP, CHAT_SUPERGROUP)
-                and str(update.message.chat_id) not in ADMIN_IDS
-            ),
-            update.message.text and len(update.message.text) > 200,
-            update.message.from_user.id not in USERNAMES,
-            update.message.date.timestamp() - datetime.datetime.now().timestamp() > TWO_MINUTES,
+    return (
+        not update.message
+        or not update.message.text
+        or (
+            update.message.chat.type not in (CHAT_GROUP, CHAT_SUPERGROUP)
+            and str(update.message.chat_id) not in ADMIN_IDS
         )
+        or update.message.text
+        and len(update.message.text) > 200
+        or update.message.from_user.id not in USERNAMES
+        or datetime.datetime.now().timestamp() - update.message.date.timestamp() > TWO_MINUTES
     )
 
 
