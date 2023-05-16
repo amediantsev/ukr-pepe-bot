@@ -11,6 +11,7 @@ from pepe import generate_pepe_message, PEPE_ALIASES
 from tg import bot
 from decorators import handle_errors
 import aws.dynamodb as dynamodb_operations
+from users import USERNAMES, USERNAMES_TO_UKR
 
 logger = Logger()
 
@@ -19,21 +20,6 @@ ADMIN_IDS = os.getenv("ADMIN_IDS", "").split(",")
 # EBOSHIM_MOSHСNO_CHAT_ID = "-1001318344639"
 SINGLE_MESSAGE_USER_PROMPT = "Напиши повідомлення довжиною від 5 до 30 слів у продовження до бесіди :\n"
 RANDOM_SINGLE_MESSAGE_USER_PROMPT = "Напиши дурне смішне повідомлення довжиною від 5 до 30 слів"
-
-USERNAMES = {
-    355526766: "Sashko",
-    279746664: "Vladik",
-    243907313: "Olegi",
-    229665876: "Borys",
-    "...": "Pavlo",
-}
-USERNAMES_TO_UKR = {
-    "Sashko": "Сашко",
-    "Vladik": "Владік",
-    "Olegi": "Олегі",
-    "Borys": "Борис",
-    "Pavlo": "Павло",
-}
 
 
 def skip_update(update: Update) -> bool:

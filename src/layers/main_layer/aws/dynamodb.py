@@ -1,5 +1,6 @@
 import datetime
 import os
+from decimal import Decimal
 
 from boto3 import resource
 
@@ -12,11 +13,11 @@ def create_conversation(chat_id, username, text):
         Item={
             "pk": f"CONVERSATION#{chat_id}",
             "sk": f"CONVERSATION#{chat_id}",
-            "chat_id": chat_id,
+            "chat_id": Decimal(chat_id),
             "messages": [{"username": username, "text": text}],
             "gsi1pk": "CONVERSATION",
             "created_at": now.isoformat(),
-            "expires_at": now.timestamp(),
+            "expires_at": Decimal(now.timestamp()),
         },
     )
 
