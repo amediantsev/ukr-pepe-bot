@@ -1,3 +1,4 @@
+import datetime
 import json
 import os
 import random
@@ -34,6 +35,8 @@ def skip_update(update: Update) -> bool:
                 and str(update.message.chat_id) not in ADMIN_IDS
             ),
             update.message.text and len(update.message.text) > 200,
+            update.message.from_user.id not in USERNAMES,
+            update.message.date.timestamp() - datetime.datetime.now().timestamp() > TWO_MINUTES,
         )
     )
 
@@ -56,7 +59,7 @@ def handler(event, _):
     if skip_update(update):
         return {"statusCode": HTTPStatus.OK}
     # logger.info(update)
-    message = dict(username=USERNAMES.get(update.message.from_user.id, "Павло"), text=update.message.text)
+    message = dict(username=USERNAMES.get(update.message.from_user.id), text=update.message.text)
     conversation = dynamodb_operations.get_conversation(update.message.chat_id)
     if not conversation or update.message.date.timestamp() - float(conversation["updated_at"]) > SIX_HOURS:
         dynamodb_operations.create_conversation(chat_id=update.message.chat_id, **message)

@@ -3,7 +3,7 @@ USERNAMES = {
     279746664: "Vladik",
     243907313: "Olegi",
     229665876: "Borys",
-    "...": "Pavlo",
+    392335831: "Pavlo",
 }
 USERNAMES_TO_UKR = {
     "Sashko": "Сашко",
