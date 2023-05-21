@@ -20,8 +20,6 @@ TWO_MINUTES = 2 * 60
 SIX_HOURS = 6 * 60 * 60
 ADMIN_IDS = os.getenv("ADMIN_IDS", "").split(",")
 PROCEED_CONVERSATION_ARN = os.getenv("PROCEED_CONVERSATION_ARN", "")
-SINGLE_MESSAGE_USER_PROMPT = "Напиши повідомлення довжиною від 5 до 30 слів у продовження до бесіди :\n"
-RANDOM_SINGLE_MESSAGE_USER_PROMPT = "Напиши дурне смішне повідомлення довжиною від 5 до 30 слів"
 
 
 def skip_update(update: Update) -> bool:
