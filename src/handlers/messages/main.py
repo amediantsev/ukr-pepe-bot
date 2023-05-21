@@ -33,7 +33,7 @@ def skip_update(update: Update) -> bool:
                 update.message.chat.type not in (CHAT_GROUP, CHAT_SUPERGROUP)
                 and str(update.message.chat_id) not in ADMIN_IDS
             ),
-            len(update.message.text) > MESSAGE_LENGTH_LIMIT,
+            update.message.text and len(update.message.text) > MESSAGE_LENGTH_LIMIT,
         )
     )
 
