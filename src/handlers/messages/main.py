@@ -16,8 +16,8 @@ from users import USERNAMES
 
 logger = Logger()
 
-TWO_MINUTES = 2 * 60
-HALF_MINUTE = 30
+RESPONSE_MAX_THRESHOLD = 210
+RESPONSE_MIN_THRESHOLD = 40
 SIX_HOURS = 6 * 60 * 60
 ADMIN_IDS = os.getenv("ADMIN_IDS", "").split(",")
 PROCEED_CONVERSATION_ARN = os.getenv("PROCEED_CONVERSATION_ARN", "")
@@ -43,7 +43,8 @@ def sending_message_triggered(message: Message, last_pepe_reply=None):
         (
             message.reply_to_message and message.reply_to_message.from_user.id == bot.id,
             any(filter(lambda pepe_alias: pepe_alias in message_text, PEPE_ALIASES)),
-            last_pepe_reply and (HALF_MINUTE < (message.date.timestamp() - float(last_pepe_reply)) < TWO_MINUTES),
+            last_pepe_reply
+            and (RESPONSE_MIN_THRESHOLD < (message.date.timestamp() - float(last_pepe_reply)) < RESPONSE_MAX_THRESHOLD),
             random.random() < 0.07,
         )
     )

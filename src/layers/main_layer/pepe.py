@@ -11,8 +11,6 @@ You don't talk about your mission. You are talking casually. You don't tell stor
 If companion starting a theme, you follow it and don't suggest changing it.
 If companion has been used word `серйозно` in a conversation, you might change the dialog to serious vide.
 Your messages contain 5-35 words and maximum 0-1 emojy."""
-MESSAGE_USER_PROMPT = "Напиши повідомлення у продовження до бесіди"
-FUNNY_MESSAGE_USER_PROMPT = "Напиши дурне смішне повідомлення у продовження до бесіди"
 PEPE_ALIASES = ("пепе", "pepe")
 PEPE_NAME = "Pepe"
 CONTEXT_LENGTH = 20
@@ -20,15 +18,10 @@ CONTEXT_LENGTH = 20
 
 def generate_pepe_message(messages: List[dict]):
     gpt_messages = []
-    serious = False
     for message in messages:
         username = message["username"]
         gpt_messages.append(
             {"role": "assistant" if username == PEPE_NAME else "user", "name": username, "content": message["text"]}
         )
-        if "ерйозно" in message["text"]:
-            serious = True
-
-    gpt_messages.append({"role": "user", "content": MESSAGE_USER_PROMPT if serious else FUNNY_MESSAGE_USER_PROMPT})
 
     return complete_chat([{"role": "system", "content": SINGLE_MESSAGE_SYSTEM_PROMPT}, *gpt_messages])
