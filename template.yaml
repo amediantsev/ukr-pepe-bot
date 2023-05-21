@@ -40,7 +40,11 @@ Resources:
     Properties:
       CodeUri: src/handlers/messages
       Handler: main.handler
-      Timeout: 180
+      Timeout: 27
+      Environment:
+        Variables:
+          PROCEED_CONVERSATION_ARN:
+            Fn::GetAtt: [ ProceedConversation, Arn ]
       Layers:
         - !Ref MainLayer
       Events:
@@ -62,7 +66,33 @@ Resources:
                 - "dynamodb:DeleteItem"
                 - "dynamodb:BatchWriteItem"
               Resource: "*"
-
+            - Sid: LambdaPolicy
+              Effect: Allow
+              Action:
+                - "lambda:InvokeFunction"
+              Resource:
+                - Fn::GetAtt: [ ProceedConversation, Arn ]
+  ProceedConversation:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/handlers/messages
+      Handler: proceed_conversation.handler
+      Timeout: 180
+      Layers:
+        - !Ref MainLayer
+      Policies:
+        - Statement:
+            - Sid: DynamodbPolicy
+              Effect: Allow
+              Action:
+                - "dynamodb:GetItem"
+                - "dynamodb:PutItem"
+                - "dynamodb:Query"
+                - "dynamodb:UpdateItem"
+                - "dynamodb:DescribeTable"
+                - "dynamodb:DeleteItem"
+                - "dynamodb:BatchWriteItem"
+              Resource: "*"
   # DynamoDB
   MainTable:
     Type: AWS::DynamoDB::Table

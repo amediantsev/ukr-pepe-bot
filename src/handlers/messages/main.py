@@ -7,19 +7,19 @@ from aws_lambda_powertools import Logger
 from telegram import Update, Message
 from telegram.constants import CHAT_GROUP, CHAT_SUPERGROUP
 
-from pepe import generate_pepe_message, PEPE_ALIASES, PEPE_NAME
+from pepe import PEPE_ALIASES, CONTEXT_LENGTH
 from tg import bot
 from decorators import handle_errors
 import aws.dynamodb as dynamodb_operations
-from users import USERNAMES, USERNAMES_TO_UKR
+from aws.aws_lambda import invoke as invoke_lambda
+from users import USERNAMES
 
 logger = Logger()
 
 TWO_MINUTES = 2 * 60
 SIX_HOURS = 6 * 60 * 60
-GPT_CONTEXT_LENGTH = 6
 ADMIN_IDS = os.getenv("ADMIN_IDS", "").split(",")
-# EBOSHIM_MOSHСNO_CHAT_ID = "-1001318344639"
+PROCEED_CONVERSATION_ARN = os.getenv("PROCEED_CONVERSATION_ARN", "")
 SINGLE_MESSAGE_USER_PROMPT = "Напиши повідомлення довжиною від 5 до 30 слів у продовження до бесіди :\n"
 RANDOM_SINGLE_MESSAGE_USER_PROMPT = "Напиши дурне смішне повідомлення довжиною від 5 до 30 слів"
 
@@ -63,19 +63,13 @@ def handler(event, _):
         dynamodb_operations.append_conversation_message(
             chat_id=update.message.chat_id,
             **message,
-            pop_old_message=len(conversation.get("messages", [])) >= GPT_CONTEXT_LENGTH
+            pop_old_message=len(conversation.get("messages", [])) >= CONTEXT_LENGTH
         )
 
     if sending_message_triggered(update.message, last_pepe_reply=conversation.get("last_pepe_reply")):
-        pepe_reply = generate_pepe_message(conversation.get("messages", []) + [message])
-        for name, ukr_name in USERNAMES_TO_UKR.items():
-            pepe_reply = pepe_reply.replace(name, ukr_name)
-        bot.send_message(update.message.chat_id, text=pepe_reply)
-        dynamodb_operations.append_conversation_message(
-            chat_id=update.message.chat_id,
-            username=PEPE_NAME,
-            text=pepe_reply,
-            pop_old_message=len(conversation.get("messages", [])) > GPT_CONTEXT_LENGTH,
+        invoke_lambda(
+            func_identifier=PROCEED_CONVERSATION_ARN,
+            event={"messages": conversation.get("messages", []) + [message], "chat_id": update.message.chat_id},
         )
 
     return {"statusCode": HTTPStatus.OK}
