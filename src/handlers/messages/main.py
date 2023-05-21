@@ -18,6 +18,7 @@ logger = Logger()
 
 RESPONSE_MAX_THRESHOLD = 210
 RESPONSE_MIN_THRESHOLD = 40
+MESSAGE_LENGTH_LIMIT = 400
 SIX_HOURS = 6 * 60 * 60
 ADMIN_IDS = os.getenv("ADMIN_IDS", "").split(",")
 PROCEED_CONVERSATION_ARN = os.getenv("PROCEED_CONVERSATION_ARN", "")
@@ -32,7 +33,7 @@ def skip_update(update: Update) -> bool:
                 update.message.chat.type not in (CHAT_GROUP, CHAT_SUPERGROUP)
                 and str(update.message.chat_id) not in ADMIN_IDS
             ),
-            len(update.message.text) > 210,
+            len(update.message.text) > MESSAGE_LENGTH_LIMIT,
         )
     )
 
