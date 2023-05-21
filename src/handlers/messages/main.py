@@ -17,6 +17,7 @@ from users import USERNAMES
 logger = Logger()
 
 TWO_MINUTES = 2 * 60
+HALF_MINUTE = 30
 SIX_HOURS = 6 * 60 * 60
 ADMIN_IDS = os.getenv("ADMIN_IDS", "").split(",")
 PROCEED_CONVERSATION_ARN = os.getenv("PROCEED_CONVERSATION_ARN", "")
@@ -26,11 +27,12 @@ def skip_update(update: Update) -> bool:
     return any(
         (
             not update.message,
+            not update.message.text,
             (
                 update.message.chat.type not in (CHAT_GROUP, CHAT_SUPERGROUP)
                 and str(update.message.chat_id) not in ADMIN_IDS
             ),
-            update.message.text and 25 < len(update.message.text) > 200,
+            len(update.message.text) > 210,
         )
     )
 
@@ -41,7 +43,7 @@ def sending_message_triggered(message: Message, last_pepe_reply=None):
         (
             message.reply_to_message and message.reply_to_message.from_user.id == bot.id,
             any(filter(lambda pepe_alias: pepe_alias in message_text, PEPE_ALIASES)),
-            last_pepe_reply and (message.date.timestamp() - float(last_pepe_reply)) < TWO_MINUTES,
+            last_pepe_reply and (HALF_MINUTE < (message.date.timestamp() - float(last_pepe_reply)) < TWO_MINUTES),
             random.random() < 0.07,
         )
     )
