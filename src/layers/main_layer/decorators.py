@@ -27,7 +27,10 @@ def handle_errors(f):
                 logger.error(f"user {user_chat_id} has blocked bot")
         except Exception:
             message = Update.de_json(json.loads(event.get("body") or "{}"), bot).message
-            username = USERNAMES.get(message.from_user.id)
+            if message:
+                username = USERNAMES.get(message.from_user.id)
+            else:
+                username = None
             logger.exception("Unexpected error.")
             for admin_id in ADMIN_IDS:
                 send_message(
