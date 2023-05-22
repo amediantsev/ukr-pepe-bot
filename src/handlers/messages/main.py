@@ -25,16 +25,14 @@ PROCEED_CONVERSATION_ARN = os.getenv("PROCEED_CONVERSATION_ARN", "")
 
 
 def skip_update(update: Update) -> bool:
-    return any(
-        (
-            not update.message,
-            not update.message.text,
-            (
-                update.message.chat.type not in (CHAT_GROUP, CHAT_SUPERGROUP)
-                and str(update.message.chat_id) not in ADMIN_IDS
-            ),
-            update.message.text and len(update.message.text) > MESSAGE_LENGTH_LIMIT,
+    return (
+        not update.message
+        or not update.message.text
+        or (
+            update.message.chat.type not in (CHAT_GROUP, CHAT_SUPERGROUP)
+            and str(update.message.chat_id) not in ADMIN_IDS
         )
+        or len(update.message.text) > MESSAGE_LENGTH_LIMIT
     )
 
 

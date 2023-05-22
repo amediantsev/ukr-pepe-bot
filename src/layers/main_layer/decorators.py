@@ -35,7 +35,7 @@ def handle_errors(f):
             for admin_id in ADMIN_IDS:
                 send_message(
                     user_chat_id=admin_id,
-                    text=f"Error happened for @{username or message.from_user.id}:\n\n{traceback.format_exc()}",
+                    text=f"Error happened for @{username}:\n\n{traceback.format_exc()}",
                     disable_markdown=True,
                 )
             send_message(user_chat_id=message.from_user.id, text="Sorry, something went wrong.")
