@@ -55,7 +55,7 @@ def handler(event, _):
     if skip_update(update):
         return {"statusCode": HTTPStatus.OK}
     # logger.info(update)
-    message = dict(username=USERNAMES.get(update.message.from_user.id, "Павло"), text=update.message.text)
+    message = dict(username=USERNAMES.get(update.message.from_user.id, "Pavlo"), text=update.message.text)
     conversation = dynamodb_operations.get_conversation(update.message.chat_id)
     if not conversation or update.message.date.timestamp() - float(conversation["updated_at"]) > SIX_HOURS:
         dynamodb_operations.create_conversation(chat_id=update.message.chat_id, **message)

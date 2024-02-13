@@ -26,19 +26,21 @@ def handle_errors(f):
             if user_chat_id and user_chat_id not in ADMIN_IDS:
                 logger.error(f"user {user_chat_id} has blocked bot")
         except Exception:
-            message = Update.de_json(json.loads(event.get("body") or "{}"), bot).message
-            if message:
-                username = USERNAMES.get(message.from_user.id)
+            logger.exception("Unexpected error.")
+            update = Update.de_json(json.loads(event.get("body") or "{}"), bot)
+            if not update:
+                return {"statusCode": HTTPStatus.OK}
+            if update.message:
+                username = USERNAMES.get(update.message.from_user.id, "Pavlo")
             else:
                 username = None
-            logger.exception("Unexpected error.")
             for admin_id in ADMIN_IDS:
                 send_message(
                     user_chat_id=admin_id,
                     text=f"Error happened for @{username}:\n\n{traceback.format_exc()}",
                     disable_markdown=True,
                 )
-            send_message(user_chat_id=message.from_user.id, text="Sorry, something went wrong.")
+            send_message(user_chat_id=update.message.from_user.id, text="Sorry, something went wrong.")
 
         return {"statusCode": HTTPStatus.OK}
 

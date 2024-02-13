@@ -16,6 +16,6 @@ def complete_chat(messages: List[dict]) -> str:
     response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=messages,
-        temperature=0.75,
+        temperature=0.82,
     )
     return response["choices"][0]["message"]["content"]
